@@ -1,9 +1,15 @@
 <!doctype html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css" integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+        <link rel="stylesheet" href="static/css/style.css">
         <title>Tiitle</title>
     </head>
     <body>
-        <h1>Hello, {{ x }} </h1>
+        <div class="center">
+            <a class="pure-button pure-button-primary" href="{{ url_for('historical_performance') }}">Historical Performance </a>
+            <a class="pure-button pure-button-primary" href="{{ url_for('manage_list') }}">Manage List</a>
+            <a class="pure-button pure-button-primary" href="{{ url_for('current_alerts') }}">Current Alerts</a>
+        </div>
     </body>
 </html>

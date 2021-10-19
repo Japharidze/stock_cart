@@ -1,0 +1,9 @@
+.center {
+    margin: auto;
+    position: absolute;
+    width: 50%;
+    top: 30%;
+    left: 25%;
+    padding: 10px;
+    background-color: rgb(165, 196, 181);
+}
