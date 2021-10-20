@@ -33,7 +33,6 @@ def get_alerts(codes: List = None, period: str = '7d'):
     cols = ['Date', 'Trade Type', 'Stock Code', 'Entry Price', 'Current Price']
     res = DataFrame(columns=cols)
     for code in codes:
-        print(code)
         stock = Ticker(code)
         current_price = stock.info['regularMarketPrice']
         hist = stock.history('100d')

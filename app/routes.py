@@ -1,5 +1,7 @@
 from flask import render_template
+from requests.api import get
 from app import app
+from .stock_api import get_alerts
 
 @app.route('/')
 @app.route('/index')
@@ -16,4 +18,6 @@ def manage_list():
 
 @app.route('/current_alerts')
 def current_alerts():
-    return "DONT"
+    codes = ['MSFT']
+    data = get_alerts(codes)
+    return render_template("alerts.html", shape = data.shape)
