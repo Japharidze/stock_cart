@@ -2,7 +2,7 @@ from typing import List
 
 import pandas_ta as ta
 from pandas import DataFrame
-from yfinance import Ticker
+from yfinance import Ticker, download
 
 def fill_info(df, trade_log, time, buy_sell='Buy'):
     """Writes one trade info into dataframe"""
@@ -34,7 +34,7 @@ def get_alerts(codes: List = None, period: str = '7d'):
     res = DataFrame(columns=cols)
     for code in codes:
         stock = Ticker(code)
-        current_price = stock.info['regularMarketPrice']
+        current_price = download(code, period='5m', interval='1m')['Close'].iloc[0]
         hist = stock.history('100d')
         hist.ta.stoch(high='high', low='low', k=14, d=3, append=True)
         hist.ta.stoch(high='high', low='low', k=50, d=3, append=True)
