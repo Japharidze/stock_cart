@@ -1,6 +1,8 @@
 from typing import List
+import random
 
 import pandas_ta as ta
+from faker import Faker
 from pandas import DataFrame
 from yfinance import Ticker, download
 
@@ -46,3 +48,9 @@ def get_alerts(codes: List = None, period: str = '7d'):
         dt = dt[cols]
         res = res.append(dt)
     return res
+
+def get_list():
+    fake = Faker()
+    stock_names = ['MSFT', 'GOOG', 'HOG', 'KO', 'T', 'WMT', 'AAPL', 'HPQ', 'V', 'F']
+    dt = [{'Stock Code': random.choice(stock_names), 'Stock Name': fake.name(), 'Current Price': f'{fake.pyint()}$'} for x in range(260)]
+    return dt

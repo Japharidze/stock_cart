@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block header %}
+<div>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('index') }}">Home</a>
+</div>
+<div class="b-example-divider"></div>
+{% endblock %}
+{% block body %}
+<form action="" method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class='form-group'>
+        {{ form.amount.label }}
+        {{ form.amount() }}
+    </div>
+    {% for t in form.trade_type.choices %}
+        <div class='form-check'>
+            <input class='form-check-input' type='radio' name='trade_type' value="{{ t[0] }}">
+            <label class='form-check-label'> {{ t[1] }} </label>
+        </div>
+    {% endfor %}
+    <p>
+        {{ form.submit(class_="btn btn-primary") }}
+    </p>
+</form>
+<div style="display: {{ display }}">
+    <div>
+        <h1>In last 2 years</h1>
+        <span>Total trades taken in 2 years would be: XXX.</span> <br>
+        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+    </div>
+    <div>
+        <h1>In last 5 years</h1>
+        <span>Total trades taken in 5 years would be: XXX.</span> <br>
+        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+    </div>
+    <div>
+        <h1>In last 10 years</h1>
+        <span>Total trades taken in 10 years would be: XXX.</span> <br>
+        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+    </div>
+</div>
+{% endblock %}

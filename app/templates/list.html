@@ -8,10 +8,10 @@
 {% block body %}
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="tab7" data-bs-toggle="tab" data-bs-target="#data7days" type="button" role="tab" aria-controls="home" aria-selected="true">Last 7 days alerts</button>
+      <button class="nav-link active" id="tab7" data-bs-toggle="tab" data-bs-target="#data7days" type="button" role="tab" aria-controls="home" aria-selected="true">Nasdaq List</button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="tab24" data-bs-toggle="tab" data-bs-target="#data24H" type="button" role="tab" aria-controls="profile" aria-selected="false">Last 24 hours alerts</button>
+      <button class="nav-link" id="tab24" data-bs-toggle="tab" data-bs-target="#data24H" type="button" role="tab" aria-controls="profile" aria-selected="false">ASX List</button>
     </li>
 </ul>
 <div class='tab-content' id='myTabContent'>
@@ -19,23 +19,19 @@
         <table id="data" class='table table-striped'>
             <thead>
             <tr>
-                <th>Date</th>
-                <th>Trade Type</th>
                 <th>Stock Code</th>
-                <th>Entry Price</th>
+                <th>Stock Name</th>
                 <th>Current Price</th>
-                <th>Past Alerts</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-                {% for _, alert in alerts.iterrows() %}
+                {% for _, row in data[0].iterrows() %}
                 <tr>
-                    <td>{{ alert.Date.date() }}</td>
-                    <td>{{ alert['Trade Type'] }}</td>
-                    <td>{{ alert['Stock Code'] }}</td>
-                    <td>{{ alert['Entry Price']|round(2) }}</td>
-                    <td>{{ alert['Current Price']|round(2) }}</td>
-                    <td><a href="">View</a></td>
+                    <td>{{ row['Stock Code'] }}</td>
+                    <td>{{ row['Stock Name'] }}</td>
+                    <td>{{ row['Current Price'] }}</td>
+                    <td><a href="">View Trades and Performance</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -45,25 +41,21 @@
         <table class='table table-striped'>
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Trade Type</th>
                     <th>Stock Code</th>
-                    <th>Entry Price</th>
+                    <th>Stock Name</th>
                     <th>Current Price</th>
-                    <th>Past Alerts</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for _, alert in alerts24.iterrows() %}
+                {% for _, row in data[1].iterrows() %}
                 <tr>
-                    <td>{{ alert.Date.date() }}</td>
-                    <td>{{ alert['Trade Type'] }}</td>
-                    <td>{{ alert['Stock Code'] }}</td>
-                    <td>{{ alert['Entry Price']|round(2) }}</td>
-                    <td>{{ alert['Current Price']|round(2) }}</td>
-                    <td><a href="">Aqac View</a></td>
-                {% endfor %}
+                    <td>{{ row['Stock Code'] }}</td>
+                    <td>{{ row['Stock Name'] }}</td>
+                    <td>{{ row['Current Price'] }}</td>
+                    <td><a href="">View Trades and Performance</a></td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -72,7 +64,9 @@
 <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready( function () {
-    $('.table').DataTable();
+    $('.table').DataTable({
+        "order": []
+    });
     } );
 </script>
 {% endblock %}
