@@ -1,5 +1,5 @@
-$('#deleteStocks').click(function() {
-    var checked_boxes = $('input[name="row-check"]:checked')
+$('.deleteStocks').click(function() {
+    var checked_boxes = $('.show input[name="row-check"]:checked')
     var list = checked_boxes.map(function() {
         return this['value'];
     }).get();

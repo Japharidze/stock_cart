@@ -60,9 +60,9 @@
         <form method='POST' action="{{ url_for('del_stocks') }}">
             <div class='mt-3 mb-3'>
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
-                <button type="button" class="btn btn-outline-danger" id="deleteStocks">Delete stocks</button>
+                <button type="button" class="btn btn-outline-danger deleteStocks">Delete stocks</button>
             </div>
-            <table id="data" class='table table-striped'>
+            <table class='table table-striped'>
                 <thead>
                 <tr>
                     <th><input id="check-all" type="checkbox"></th>
@@ -90,25 +90,25 @@
         <form method='POST' action="{{ url_for('del_stocks') }}">
             <div class='mt-3 mb-3'>
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
-                <button type="button" class="btn btn-outline-danger" id="delewteStocks">Delete stocks</button>
+                <button type="button" class="btn btn-outline-danger deleteStocks">Delete stocks</button>
             </div>
             <table class='table table-striped'>
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th>Stock Code</th>
-                        <th>Stock Name</th>
-                        <th>Current Price</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th><input id="check-all" type="checkbox"></th>
+                    <th>Stock Code</th>
+                    <th>Stock Price</th>
+                    <th>Current Price</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for s in data[0] %}
+                    {% for u in data[0] %}
                     <tr>
-                        <td></td>
-                        <td>{{ s.stock_code }}</td>
-                        <td>{{ s.entry_price }}</td>
-                        <td>{{ 'jer ar gvaq' }}</td>
+                        <td><input type="checkbox" name="row-check" value="{{ u.id }}"></td>
+                        <td>{{ u.stock_code }}</td>
+                        <td>{{ u.entry_price|round(2) }}</td>
+                        <td>{{ 'sulertia' }}</td>
                         <td><a href="">View Trades and Performance</a></td>
                     </tr>
                     {% endfor %}
