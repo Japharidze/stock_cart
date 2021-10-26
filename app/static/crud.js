@@ -3,6 +3,9 @@ $('#deleteStocks').click(function() {
     var list = checked_boxes.map(function() {
         return this['value'];
     }).get();
+    if (list.length == 0){
+        return
+    };
     $.post("/delete_stocks", {"ids": list.join(',')}).done(
         function(){
             location.reload();
