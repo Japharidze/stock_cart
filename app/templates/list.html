@@ -2,8 +2,10 @@
 {% block header %}
 <div class="row">
     <div class="col-8">
+        <!--
         <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
         <button type="button" class="btn btn-outline-danger" id="deleteStocks">Delete stocks</button>
+        -->
     </div>
     <div class="col-4" align="right">
         <a class="btn btn-primary btn-lg" href="{{ url_for('index') }}">Home</a>
@@ -17,30 +19,30 @@
         <h5 class="modal-title" id="exampleModalLabel">Add Stock</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div class="modal-body">
-        <form action="" method="post" novalidate>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="modal-body">
             <div class="mb-3">
-                <input class="form-check-input" type="radio" name="stockR" id="stockR1" value="nasdaq">
-                <label class="form-check-label" for="stockR1">Nasdaq</label>
-                <input class="form-check-input" type="radio" name="stockR" id="stockR2" value="asx">
-                <label class="form-check-label" for="stockR2">ASX</label>
+                {% for c in form.market.choices %}
+                    <input class="form-check-input" type="radio" name="market" value="{{ c[0] }}">
+                    <label class="form-check-label">{{ c[1] }}</label>
+                {% endfor %}
             </div>
             <div class="mb-3">
-                <label for="inputCode" class="form-label">Stock Code</label>
-                <input type="text" id="inputCode" class="form-control">
+                {{ form.stock_code.label(class_='form-label') }}
+                {{ form.stock_code(class_='form-control') }}
             </div>
             <div class="mb-3">
-                <label for="inputPrice" class="form-label">Entry Price</label>
-                <input type="text" id="inputPrice" class="form-control">
+                {{ form.entry_price.label(class_='form-label') }}
+                {{ form.entry_price(class_='form-control') }}
             </div>
-        </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            {{ form.submit() }}
+        </div>
+    </form>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="add_stock()">Add Stock</button>
-    </div>
-    </div>
-</div>
 </div>
 </div>
 {% endblock %}
@@ -55,52 +57,64 @@
 </ul>
 <div class='tab-content' id='myTabContent'>
     <div class='tab-pane fade show active' id='nasdaqList' role='tabpanel' aria-labelledby="btn-7tab">
-        <table id="data" class='table table-striped'>
-            <thead>
-            <tr>
-                <th><input id="check-all" type="checkbox"></th>
-                <th>Stock Code</th>
-                <th>Stock Name</th>
-                <th>Current Price</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for u in data[1] %}
+        <form method='POST' action="{{ url_for('del_stocks') }}">
+            <div class='mt-3 mb-3'>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
+                <button type="button" class="btn btn-outline-danger" id="deleteStocks">Delete stocks</button>
+            </div>
+            <table id="data" class='table table-striped'>
+                <thead>
                 <tr>
-                    <td><input type="checkbox" name="row-check" value="{{ u.id }}"></td>
-                    <td>{{ u.stock_code }}</td>
-                    <td>{{ u.entry_price }}</td>
-                    <td>{{ 'sulertia' }}</td>
-                    <td><a href="">View Trades and Performance</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class='tab-pane fade' id='asxList' role='tabpanel' aria-labelledby="btn-24tab">
-        <table class='table table-striped'>
-            <thead>
-                <tr>
-                    <th></th>
+                    <th><input id="check-all" type="checkbox"></th>
                     <th>Stock Code</th>
                     <th>Stock Name</th>
                     <th>Current Price</th>
                     <th>Actions</th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for s in data[0] %}
-                <tr>
-                    <td></td>
-                    <td>{{ s.stock_code }}</td>
-                    <td>{{ s.entry_price }}</td>
-                    <td>{{ 'jer ar gvaq' }}</td>
-                    <td><a href="">View Trades and Performance</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for u in data[1] %}
+                    <tr>
+                        <td><input type="checkbox" name="row-check" value="{{ u.id }}"></td>
+                        <td>{{ u.stock_code }}</td>
+                        <td>{{ u.entry_price }}</td>
+                        <td>{{ 'sulertia' }}</td>
+                        <td><a href="">View Trades and Performance</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class='tab-pane fade' id='asxList' role='tabpanel' aria-labelledby="btn-24tab">
+        <form method='POST' action="{{ url_for('del_stocks') }}">
+            <div class='mt-3 mb-3'>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
+                <button type="button" class="btn btn-outline-danger" id="deleteStocks">Delete stocks</button>
+            </div>
+            <table class='table table-striped'>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Stock Code</th>
+                        <th>Stock Name</th>
+                        <th>Current Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in data[0] %}
+                    <tr>
+                        <td></td>
+                        <td>{{ s.stock_code }}</td>
+                        <td>{{ s.entry_price }}</td>
+                        <td>{{ 'jer ar gvaq' }}</td>
+                        <td><a href="">View Trades and Performance</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
