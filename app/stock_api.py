@@ -1,10 +1,12 @@
 from typing import List
-import random
 
 import pandas_ta as ta
 from faker import Faker
 from pandas import DataFrame
 from yfinance import Ticker, download
+
+from app import db
+from .models import Stock
 
 def fill_info(df, trade_log, time, buy_sell='Buy'):
     """Writes one trade info into dataframe"""
@@ -49,8 +51,9 @@ def get_alerts(codes: List = None, period: str = '7d'):
         res = res.append(dt)
     return res
 
-def get_list():
-    fake = Faker()
-    stock_names = ['MSFT', 'GOOG', 'HOG', 'KO', 'T', 'WMT', 'AAPL', 'HPQ', 'V', 'F']
-    dt = [{'Stock Code': random.choice(stock_names), 'Stock Name': fake.name(), 'Current Price': f'{fake.pyint()}$'} for x in range(260)]
-    return dt
+def insert_stock(market: str, code: str, price: float):
+    new_stock = Stock(market=market, 
+                    stock_code=code, 
+                    entry_price=price)
+    db.session.add(new_stock)
+    db.session.commit()

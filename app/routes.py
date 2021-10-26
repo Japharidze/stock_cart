@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, request, jsonify
 from pandas import DataFrame
 
 from app import app, db
-from .stock_api import get_alerts, get_list
+from .stock_api import get_alerts, insert_stock
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
 
@@ -25,12 +25,11 @@ def historical_performance():
 def manage_list():
     form = AddStockForm()
     if request.method == 'POST':
-        print(form.market.data)
-        print(form.stock_code.data)
-        print(form.entry_price.data)
-        print(form.validate())
         if form.validate_on_submit():
-            print('asdawr')
+            insert_stock(form.market.data,
+                        form.stock_code.data,
+                        form.entry_price.data)
+            return redirect(url_for('manage_list'))
     asx_list = Stock.query.filter_by(market='asx').all()
     nasdaq_list = Stock.query.filter_by(market='nasdaq').all()
     return render_template("list.html", data=[asx_list, nasdaq_list], form=form)
@@ -45,17 +44,6 @@ def current_alerts():
 @app.route('/test')
 def test():
     return render_template('test.html')
-
-# @app.route('/add_stock', methods=["POST"])
-# def cadd_stock():
-    # new_stock = Stock(market=request.form['market'],
-                    # stock_code=request.form['code'],
-                    # entry_price=request.form['price'])
-    # db.session.add(new_stock)
-    # db.session.commit()
-    # return redirect(url_for('manage_list'))
-    # return render_template('list.html')
-    # return jsonify({'text': 'added'})
 
 @app.route('/delete_stocks', methods=['POST'])
 def del_stocks():
