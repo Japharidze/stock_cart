@@ -1,26 +1,12 @@
-function add_stock(){
-    inputR = $('input[name="stockR"]:checked')
-    inputCode = $('#inputCode')
-    inputPrice = $('#inputPrice')
-    alert(inputPrice.val())
-    $.post("/add_stock", {
-        market: inputR.val(),
-        code: inputCode.val(),
-        price: inputPrice.val()
-    }).done(
-        function(response){
-            alert(response["text"])
-            inputR.prop('checked', false);
-            inputCode.val('');
-            inputPrice.val('');
-            $('#exampleModal').modal('toggle');
-    }).fail(function() {
-        alert('ragacas deendzra')
-    })}
-
 $('#deleteStocks').click(function() {
-    var rame = $("div.show").prop('id');
-    alert(rame);
+    var checked_boxes = $('input[name="row-check"]:checked')
+    var list = checked_boxes.map(function() {
+        return this['value'];
+    }).get();
+    $.post("/delete_stocks", {"ids": list.join(',')}).done(
+        function(){
+            location.reload();
+        });
 })
 
 $("#check-all").click(function () {

@@ -57,3 +57,7 @@ def insert_stock(market: str, code: str, price: float):
                     entry_price=price)
     db.session.add(new_stock)
     db.session.commit()
+
+def delete_stocks(ids: List):
+    Stock.query.filter(Stock.id.in_(ids)).delete()
+    db.session.commit()

@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, request, jsonify
 from pandas import DataFrame
 
 from app import app, db
-from .stock_api import get_alerts, insert_stock
+from .stock_api import get_alerts, insert_stock, delete_stocks
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
 
@@ -47,6 +47,6 @@ def test():
 
 @app.route('/delete_stocks', methods=['POST'])
 def del_stocks():
-    print('asdaaaaaaaaaaaaaaaa')
-    print(request.form.getlist('row-check'))
-    return render_template('list.html')
+    ids = request.form['ids'].split(',')
+    delete_stocks([int(x) for x in ids])
+    return jsonify({'resp': 'done'})
