@@ -8,7 +8,7 @@ class InvestmentForm(FlaskForm):
     submit = SubmitField('View result')
 
 class AddStockForm(FlaskForm):
-    market = RadioField('Market', choices=[('nasdaq', 'Nasssdaq'), ('asx', 'ASX')])
+    market = RadioField('Market', choices=[('nasdaq', 'Nasdaq'), ('asx', 'ASX')])
     stock_code = TextField('Stock Code' , validators=[DataRequired()])
     entry_price = FloatField('Entry Price', validators=[DataRequired()])
     submit = SubmitField('Add Stock')
