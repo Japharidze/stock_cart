@@ -66,8 +66,7 @@
                 <tr>
                     <th><input id="check-all" type="checkbox"></th>
                     <th>Stock Code</th>
-                    <th>Stock Price</th>
-                    <th>Current Price</th>
+                    <th>Entry Price</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -77,7 +76,6 @@
                         <td><input type="checkbox" name="row-check" value="{{ u.id }}"></td>
                         <td>{{ u.stock_code }}</td>
                         <td>{{ u.entry_price|round(2) }}</td>
-                        <td>{{ 'sulertia' }}</td>
                         <td><a href="">View Trades and Performance</a></td>
                     </tr>
                     {% endfor %}
@@ -96,8 +94,7 @@
                 <tr>
                     <th><input id="check-all" type="checkbox"></th>
                     <th>Stock Code</th>
-                    <th>Stock Price</th>
-                    <th>Current Price</th>
+                    <th>Entry Price</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -107,7 +104,6 @@
                         <td><input type="checkbox" name="row-check" value="{{ u.id }}"></td>
                         <td>{{ u.stock_code }}</td>
                         <td>{{ u.entry_price|round(2) }}</td>
-                        <td>{{ 'sulertia' }}</td>
                         <td><a href="">View Trades and Performance</a></td>
                     </tr>
                     {% endfor %}
