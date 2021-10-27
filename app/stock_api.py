@@ -1,4 +1,6 @@
 from typing import List
+from requests import get
+import json
 
 import pandas_ta as ta
 from faker import Faker
@@ -6,7 +8,7 @@ from pandas import DataFrame
 from yfinance import Ticker, download
 
 from app import db
-from .models import Stock
+from .models import Stock, Alert
 
 def fill_info(df, trade_log, time, buy_sell='Buy'):
     """Writes one trade info into dataframe"""
@@ -31,7 +33,7 @@ def get_buy_sell_info(df):
         trade_log = fill_info(df, trade_log, sell_time, buy_sell='Sell')
     return trade_log
 
-def get_alerts(codes: List = None, period: str = '7d'):
+def get_alerts_old(codes: List = None, period: str = '7d'):
     if not codes:
         return
     cols = ['Date', 'Trade Type', 'Stock Code', 'Entry Price', 'Current Price']
@@ -51,6 +53,9 @@ def get_alerts(codes: List = None, period: str = '7d'):
         res = res.append(dt)
     return res
 
+def get_alerts():
+    return Alert.query.all()
+
 def insert_stock(market: str, code: str, price: float):
     new_stock = Stock(market=market, 
                     stock_code=code, 
@@ -61,3 +66,10 @@ def insert_stock(market: str, code: str, price: float):
 def delete_stocks(ids: List):
     Stock.query.filter(Stock.id.in_(ids)).delete()
     db.session.commit()
+
+def generate_all_codes():
+    r = get('https://api.iextrading.com/1.0/ref-data/symbols')
+    stocks = r.json()
+    stock_codes = {'codes': [x['symbol'] for x in stocks]}
+    with open('stocks.json', 'w') as f:
+        json.dump(stock_codes, f)

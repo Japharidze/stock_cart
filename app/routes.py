@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, request, jsonify
 from pandas import DataFrame
 
 from app import app, db
-from .stock_api import get_alerts, insert_stock, delete_stocks
+from .stock_api import get_alerts, insert_stock, delete_stocks, get_alerts_old
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
 
@@ -36,13 +36,13 @@ def manage_list():
 
 @app.route('/current_alerts')
 def current_alerts():
-    codes = ['MSFT', 'GOOG', 'HOG', 'KO', 'T', 'WMT', 'AAPL', 'HPQ', 'V', 'F']
-    data = get_alerts(codes)
-    data24H = data[data['Date'] > datetime.now() - timedelta(1)]
-    return render_template("alerts.html", alerts = data, alerts24 = data24H)
+    data = get_alerts()
+    print(data)
+    return render_template("alerts.html", alerts = data, alerts24 = data)
 
 @app.route('/test')
 def test():
+    print(get_alerts())
     return render_template('test.html')
 
 @app.route('/delete_stocks', methods=['POST'])

@@ -1,3 +1,5 @@
+from datetime import date
+
 from app import db
 
 class Stock(db.Model):
@@ -9,13 +11,15 @@ class Stock(db.Model):
     market = db.Column(db.String(16), nullable=False)
     stock_code = db.Column(db.String(8), index=True)
     entry_price = db.Column(db.Float, nullable=False)
-    alerts = db.relationship('Alerts', backref='stocks', lazy=True)
+    alerts = db.relationship('Alert', backref='stocks', lazy=True)
 
     def __repr__(self):
         return f'{self.market} - {self.stock_code} - {self.entry_price}'
 
-class Alerts(db.Model):
+class Alert(db.Model):
+    __tablename__ = "alerts"
     id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, default=date.today())
     trade_type = db.Column(db.String(4), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id', ondelete='CASCADE'), nullable=False)
     alert_price = db.Column(db.Float, nullable=False)

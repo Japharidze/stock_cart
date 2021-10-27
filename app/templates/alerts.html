@@ -28,13 +28,13 @@
             </tr>
             </thead>
             <tbody>
-                {% for _, alert in alerts.iterrows() %}
+                {% for alert in alerts %}
                 <tr>
-                    <td>{{ alert.Date.date() }}</td>
-                    <td>{{ alert['Trade Type'] }}</td>
-                    <td>{{ alert['Stock Code'] }}</td>
-                    <td>{{ alert['Entry Price']|round(2) }}</td>
-                    <td>{{ alert['Current Price']|round(2) }}</td>
+                    <td>{{ alert.date }}</td>
+                    <td>{{ alert.trade_type }}</td>
+                    <td>{{ 'ASDAA' }}</td>
+                    <td>{{ 23193 }}</td>
+                    <td>{{ alert.alert_price|round(2) }}</td>
                     <td><a href="">View</a></td>
                 </tr>
                 {% endfor %}
@@ -54,14 +54,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for _, alert in alerts24.iterrows() %}
+                {% for alert in alerts %}
                 <tr>
-                    <td>{{ alert.Date.date() }}</td>
-                    <td>{{ alert['Trade Type'] }}</td>
-                    <td>{{ alert['Stock Code'] }}</td>
-                    <td>{{ alert['Entry Price']|round(2) }}</td>
-                    <td>{{ alert['Current Price']|round(2) }}</td>
-                    <td><a href="">Aqac View</a></td>
+                    <td>{{ alert.date }}</td>
+                    <td>{{ alert.trade_type }}</td>
+                    <td>{{ 'ASDAA' }}</td>
+                    <td>{{ 23193 }}</td>
+                    <td>{{ alert.alert_price }}</td>
+                    <td><a href="">View</a></td>
+                </tr>
                 {% endfor %}
                 </tr>
             </tbody>
