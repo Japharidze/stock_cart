@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for, request, jsonify, flash
 from pandas import DataFrame
 
 from app import app, db
@@ -30,6 +30,8 @@ def manage_list():
                         form.stock_code.data,
                         form.entry_price.data)
             return redirect(url_for('manage_list'))
+        else:
+            flash("Invalid CODE")
     asx_list = Stock.query.filter_by(market='asx').all()
     nasdaq_list = Stock.query.filter_by(market='nasdaq').all()
     return render_template("list.html", data=[asx_list, nasdaq_list], form=form)

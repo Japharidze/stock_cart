@@ -2,10 +2,15 @@
 {% block header %}
 <div class="row">
     <div class="col-8">
-        <!--
-        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Stock</button>
-        <button type="button" class="btn btn-outline-danger" id="deleteStocks">Delete stocks</button>
-        -->
+        {% with msg = get_flashed_messages() %}
+        {% if msg %}
+        <ul>
+            {% for m in msg %}
+            <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
     </div>
     <div class="col-4" align="right">
         <a class="btn btn-primary btn-lg" href="{{ url_for('index') }}">Home</a>
