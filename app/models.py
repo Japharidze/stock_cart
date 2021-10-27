@@ -14,7 +14,7 @@ class Stock(db.Model):
     alerts = db.relationship('Alert', backref='stocks', lazy=True)
 
     def __repr__(self):
-        return f'{self.market} - {self.stock_code} - {self.entry_price}'
+        return f'{self.id} - {self.market} - {self.stock_code} - {self.entry_price}'
 
 class Alert(db.Model):
     __tablename__ = "alerts"
@@ -23,3 +23,6 @@ class Alert(db.Model):
     trade_type = db.Column(db.String(4), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id', ondelete='CASCADE'), nullable=False)
     alert_price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f'{self.trade_type} - {self.stock_id} - {self.alert_price}'

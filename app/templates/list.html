@@ -2,15 +2,9 @@
 {% block header %}
 <div class="row">
     <div class="col-8">
-        {% with msg = get_flashed_messages() %}
-        {% if msg %}
-        <ul>
-            {% for m in msg %}
-            <li>{{ m }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+        {% for _, errors in form.errors.items() %}
+        <div class="alert alert-danger">{{ ', '.join(errors) }}</div>
+        {% endfor %}
     </div>
     <div class="col-4" align="right">
         <a class="btn btn-primary btn-lg" href="{{ url_for('index') }}">Home</a>

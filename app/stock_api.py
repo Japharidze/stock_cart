@@ -1,6 +1,7 @@
+import json
 from typing import List
 from requests import get
-import json
+from datetime import date, timedelta
 
 import pandas_ta as ta
 from faker import Faker
@@ -33,14 +34,11 @@ def get_buy_sell_info(df):
         trade_log = fill_info(df, trade_log, sell_time, buy_sell='Sell')
     return trade_log
 
-def get_alerts_old(codes: List = None, period: str = '7d'):
-    if not codes:
-        return
-    cols = ['Date', 'Trade Type', 'Stock Code', 'Entry Price', 'Current Price']
-    res = DataFrame(columns=cols)
+def generate_alerts():
+    codes = Stock.query.all()
     for code in codes:
-        stock = Ticker(code)
-        current_price = download(code, period='5m', interval='1m')['Close'].iloc[0]
+        stock = Ticker(code.stock_code)
+        current_price = download(code.stock_code, period='5m', interval='1m')['Close'].iloc[0]
         hist = stock.history('100d')
         hist.ta.stoch(high='high', low='low', k=14, d=3, append=True)
         hist.ta.stoch(high='high', low='low', k=50, d=3, append=True)
@@ -49,12 +47,23 @@ def get_alerts_old(codes: List = None, period: str = '7d'):
         dt = get_buy_sell_info(hist)
         dt['Stock Code'] = code
         dt['Current Price'] = current_price
-        dt = dt[cols]
-        res = res.append(dt)
-    return res
+        for _, row in dt.iterrows():
+            alert = Alert(trade_type=row['Trade Type'],
+                        stock_id=code.id,
+                        alert_price=row['Current Price'])
+            db.session.add(alert)
+    db.session.commit()
 
 def get_alerts():
-    return Alert.query.all()
+    query = Alert.query.join(Stock.alerts).with_entities(Alert.date,
+                                                        Alert.trade_type,
+                                                        Stock.stock_code,
+                                                        Stock.entry_price,
+                                                        Alert.alert_price
+                                                        ).order_by(Alert.id)
+    last_day = query.filter(Alert.date == date.today())
+    last_week = query.filter(Alert.date > date.today() - timedelta(7))
+    return last_day, last_week
 
 def insert_stock(market: str, code: str, price: float):
     new_stock = Stock(market=market, 

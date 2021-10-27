@@ -32,8 +32,8 @@
                 <tr>
                     <td>{{ alert.date }}</td>
                     <td>{{ alert.trade_type }}</td>
-                    <td>{{ 'ASDAA' }}</td>
-                    <td>{{ 23193 }}</td>
+                    <td>{{ alert.stock_code }}</td>
+                    <td>{{ alert.entry_price|round(2) }}</td>
                     <td>{{ alert.alert_price|round(2) }}</td>
                     <td><a href="">View</a></td>
                 </tr>
@@ -54,13 +54,13 @@
                 </tr>
             </thead>
             <tbody>
-                {% for alert in alerts %}
+                {% for alert in alerts24 %}
                 <tr>
                     <td>{{ alert.date }}</td>
                     <td>{{ alert.trade_type }}</td>
-                    <td>{{ 'ASDAA' }}</td>
-                    <td>{{ 23193 }}</td>
-                    <td>{{ alert.alert_price }}</td>
+                    <td>{{ alert.stock_code }}</td>
+                    <td>{{ alert.entry_price|round(2) }}</td>
+                    <td>{{ alert.alert_price|round(2) }}</td>
                     <td><a href="">View</a></td>
                 </tr>
                 {% endfor %}

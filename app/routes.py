@@ -1,10 +1,7 @@
-from datetime import datetime, timedelta
+from flask import render_template, redirect, url_for, request, jsonify
 
-from flask import render_template, redirect, url_for, request, jsonify, flash
-from pandas import DataFrame
-
-from app import app, db
-from .stock_api import get_alerts, insert_stock, delete_stocks, get_alerts_old
+from app import app
+from .stock_api import get_alerts, insert_stock, delete_stocks
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
 
@@ -30,17 +27,14 @@ def manage_list():
                         form.stock_code.data,
                         form.entry_price.data)
             return redirect(url_for('manage_list'))
-        else:
-            flash("Invalid CODE")
-    asx_list = Stock.query.filter_by(market='asx').all()
-    nasdaq_list = Stock.query.filter_by(market='nasdaq').all()
+    asx_list = Stock.query.filter_by(market='asx').order_by(Stock.id).all()
+    nasdaq_list = Stock.query.filter_by(market='nasdaq').order_by(Stock.id).all()
     return render_template("list.html", data=[asx_list, nasdaq_list], form=form)
 
 @app.route('/current_alerts')
 def current_alerts():
-    data = get_alerts()
-    print(data)
-    return render_template("alerts.html", alerts = data, alerts24 = data)
+    day, week = get_alerts()
+    return render_template("alerts.html", alerts=week, alerts24=day)
 
 @app.route('/test')
 def test():
