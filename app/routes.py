@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, jsonify
 
 from app import app
-from .stock_api import get_alerts, insert_stock, delete_stocks
+from .stock_api import get_alerts, insert_stock, delete_stocks, historical_model
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
 
@@ -13,10 +13,15 @@ def index():
 @app.route('/historical_performance', methods=['GET', 'POST'])
 def historical_performance():
     form = InvestmentForm()
-    display = 'none'
+    periodic_data = None
     if form.validate_on_submit():
-        display = ''
-    return render_template('historic_performance.html', form=form, display=display)
+        trade_type = form.trade_type.data
+        periodic_data = historical_model(trade_type=trade_type)
+        # return redirect(url_for('historical_performance'))
+    form.amount.data = None
+    return render_template('historic_performance.html',
+                            form=form,
+                            data=periodic_data)
 
 @app.route('/manage_list', methods=['GET', 'POST'])
 def manage_list():

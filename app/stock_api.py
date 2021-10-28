@@ -1,7 +1,9 @@
 import json
-from typing import List
+from typing import List, Tuple
+from flask_migrate import current
 from requests import get
 from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
 import pandas_ta as ta
 from faker import Faker
@@ -38,7 +40,7 @@ def generate_alerts():
     codes = Stock.query.all()
     for code in codes:
         stock = Ticker(code.stock_code)
-        current_price = download(code.stock_code, period='5m', interval='1m')['Close'].iloc[0]
+        current_price = download(code.stock_code, period='5m', interval='1m', rounding=True)['Close'].iloc[0]
         hist = stock.history('100d')
         hist.ta.stoch(high='high', low='low', k=14, d=3, append=True)
         hist.ta.stoch(high='high', low='low', k=50, d=3, append=True)
@@ -66,7 +68,7 @@ def get_alerts():
     return last_day, last_week
 
 def insert_stock(market: str, code: str):
-    current_price = download(code, period='5m', interval='1m')['Close'].iloc[0]
+    current_price = download(code, period='5m', interval='1m', rounding=True)['Close'].iloc[0]
     new_stock = Stock(market=market, 
                     stock_code=code, 
                     entry_price=current_price)
@@ -83,3 +85,35 @@ def generate_all_codes():
     stock_codes = {'codes': [x['symbol'] for x in stocks]}
     with open('stocks.json', 'w') as f:
         json.dump(stock_codes, f)
+
+def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
+    query = Alert.query.join(Stock.alerts).with_entities(
+                                            Alert.date,
+                                            Alert.trade_type,
+                                            Stock.stock_code,
+                                            Alert.alert_price
+    )
+    today = date.today()
+    date_filters = [2, 5, 10]
+    date_filters = [today - relativedelta(years=x) for x in date_filters]
+
+    queries = [query.filter(Alert.date >= dt_f) for dt_f in date_filters]
+    if trade_type != 'Both':
+        data = [q.filter(Alert.trade_type == trade_type).all() for q in queries]
+    else:
+        data = [q.all() for q in queries]
+    
+    stocks = [s.stock_code for s in data[2]] + [''] # for download to work even with 1 code
+    current_prices = download(stocks, 
+                            period="5m",
+                            interval="1m",
+                            show_errors=False,
+                            rounding=True)['Close'].iloc[0]
+
+    res = []
+    for period in data:
+        count_of_trades = len(period)
+        portfolio_value = sum([t.alert_price - current_prices[t.stock_code] for t in period])
+        res.append((count_of_trades, portfolio_value))
+
+    return res

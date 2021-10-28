@@ -22,21 +22,23 @@
         {{ form.submit(class_="btn btn-primary") }}
     </p>
 </form>
-<div style="display: {{ display }}">
+<div>
+    {% if data %}
     <div>
         <h1>In last 2 years</h1>
-        <span>Total trades taken in 2 years would be: XXX.</span> <br>
-        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+        <span>Total trades taken in 2 years would be: {{ data[0][0] }}.</span> <br>
+        <span>Based on current value your portfolio would be worth: ${{ data[0][1] }}.</span>
     </div>
     <div>
         <h1>In last 5 years</h1>
-        <span>Total trades taken in 5 years would be: XXX.</span> <br>
-        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+        <span>Total trades taken in 5 years would be: {{ data[1][0] }}.</span> <br>
+        <span>Based on current value your portfolio would be worth: ${{ data[1][1] }}.</span>
     </div>
     <div>
         <h1>In last 10 years</h1>
-        <span>Total trades taken in 10 years would be: XXX.</span> <br>
-        <span>Based on current value your portfolio would be worth: $XXXXX.</span>
+        <span>Total trades taken in 10 years would be: {{ data[2][0] }}.</span> <br>
+        <span>Based on current value your portfolio would be worth: ${{ data[2][1] }}.</span>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

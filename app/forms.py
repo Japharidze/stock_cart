@@ -6,7 +6,7 @@ from app import app
 
 class InvestmentForm(FlaskForm):
     amount = IntegerField('Hypothetical Investment Amount: ', validators=[DataRequired()])
-    trade_type = RadioField('Trades directions to include', choices=[('sell', 'Sell'), ('buy', 'Buy'), ('both', 'Both')])
+    trade_type = RadioField('Trades directions to include', choices=[('Sell', 'Sell'), ('Buy', 'Buy'), ('Both', 'Both')])
     submit = SubmitField('View result')
 
 class AddStockForm(FlaskForm):
