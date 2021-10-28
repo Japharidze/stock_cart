@@ -12,7 +12,6 @@ class InvestmentForm(FlaskForm):
 class AddStockForm(FlaskForm):
     market = RadioField('Market', choices=[('nasdaq', 'Nasdaq'), ('asx', 'ASX')], validators=[DataRequired(message="Choose the market!")])
     stock_code = TextField('Stock Code' , validators=[DataRequired(message="Fill the Code!")])
-    entry_price = FloatField('Entry Price', validators=[DataRequired(message="Fill the Price!")])
     submit = SubmitField('Add Stock')
 
     def validate_stock_code(self, code):

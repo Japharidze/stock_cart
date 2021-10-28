@@ -65,10 +65,11 @@ def get_alerts():
     last_week = query.filter(Alert.date > date.today() - timedelta(7))
     return last_day, last_week
 
-def insert_stock(market: str, code: str, price: float):
+def insert_stock(market: str, code: str):
+    current_price = download(code, period='5m', interval='1m')['Close'].iloc[0]
     new_stock = Stock(market=market, 
                     stock_code=code, 
-                    entry_price=price)
+                    entry_price=current_price)
     db.session.add(new_stock)
     db.session.commit()
 
