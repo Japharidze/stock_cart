@@ -12,10 +12,10 @@ $('.deleteStocks').click(function() {
         });
 })
 
-$("#check-all").click(function () {
-		if ($("input:checkbox").prop("checked")) {
-			$("input:checkbox[name='row-check']").prop("checked", true);
+$("input[name='check-all'").click(function () {
+		if ($(".active input:checkbox").prop("checked")) {
+			$(".active input:checkbox[name='row-check']").prop("checked", true);
 		} else {
-			$("input:checkbox[name='row-check']").prop("checked", false);
+			$(".active input:checkbox[name='row-check']").prop("checked", false);
 		}
 	});
