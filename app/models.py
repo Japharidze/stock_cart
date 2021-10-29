@@ -11,7 +11,7 @@ class Stock(db.Model):
     market = db.Column(db.String(16), nullable=False)
     stock_code = db.Column(db.String(8), index=True)
     entry_price = db.Column(db.Float, nullable=False)
-    alerts = db.relationship('Alert', backref='stocks', lazy=True)
+    alerts = db.relationship('Alert', backref='stocks', lazy=True, cascade="all, delete")
 
     def __repr__(self):
         return f'{self.id}:{self.market}:{self.stock_code}:{self.entry_price}'
