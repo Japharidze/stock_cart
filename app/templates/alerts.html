@@ -30,11 +30,11 @@
             <tbody>
                 {% for alert in alerts %}
                 <tr>
-                    <td>{{ alert.date }}</td>
-                    <td>{{ alert.trade_type }}</td>
-                    <td>{{ alert.stock_code }}</td>
-                    <td>{{ alert.entry_price|round(2) }}</td>
-                    <td>{{ alert.alert_price|round(2) }}</td>
+                    <td>{{ alert['date'] }}</td>
+                    <td>{{ alert['trade_type'] }}</td>
+                    <td>{{ alert['stock_code'] }}</td>
+                    <td>{{ alert['alert_price'] }}</td>
+                    <td>{{ alert['current_price'] }}</td>
                     <td><a href="">View</a></td>
                 </tr>
                 {% endfor %}
@@ -56,11 +56,11 @@
             <tbody>
                 {% for alert in alerts24 %}
                 <tr>
-                    <td>{{ alert.date }}</td>
-                    <td>{{ alert.trade_type }}</td>
-                    <td>{{ alert.stock_code }}</td>
-                    <td>{{ alert.entry_price|round(2) }}</td>
-                    <td>{{ alert.alert_price|round(2) }}</td>
+                    <td>{{ alert['date'] }}</td>
+                    <td>{{ alert['trade_type'] }}</td>
+                    <td>{{ alert['stock_code'] }}</td>
+                    <td>{{ alert['alert_price'] }}</td>
+                    <td>{{ alert['current_price'] }}</td>
                     <td><a href="">View</a></td>
                 </tr>
                 {% endfor %}

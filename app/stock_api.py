@@ -6,7 +6,6 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 import pandas_ta as ta
-from faker import Faker
 from pandas import DataFrame
 from yfinance import Ticker, download
 
@@ -36,23 +35,23 @@ def get_buy_sell_info(df):
         trade_log = fill_info(df, trade_log, sell_time, buy_sell='Sell')
     return trade_log
 
-def generate_alerts():
+def generate_alerts(period: str ='100d'):
     codes = Stock.query.all()
     for code in codes:
         stock = Ticker(code.stock_code)
-        current_price = download(code.stock_code, period='5m', interval='1m', rounding=True)['Close'].iloc[0]
-        hist = stock.history('100d')
+        hist = stock.history(period)
         hist.ta.stoch(high='high', low='low', k=14, d=3, append=True)
         hist.ta.stoch(high='high', low='low', k=50, d=3, append=True)
         hist['buy_K'] = hist.apply(lambda x: x['STOCHk_14_3_3']>70 and x['STOCHk_50_3_3'] < 30, axis=1)
         hist['sell_K'] = hist.apply(lambda x: x['STOCHk_14_3_3']<30 and x['STOCHk_50_3_3'] > 70, axis=1)
         dt = get_buy_sell_info(hist)
         dt['Stock Code'] = code
-        dt['Current Price'] = current_price
+        print(period)
         for _, row in dt.iterrows():
-            alert = Alert(trade_type=row['Trade Type'],
+            alert = Alert(date=row['Date'],
+                        trade_type=row['Trade Type'],
                         stock_id=code.id,
-                        alert_price=row['Current Price'])
+                        alert_price=row['Entry Price'])
             db.session.add(alert)
     db.session.commit()
 
@@ -60,12 +59,11 @@ def get_alerts():
     query = Alert.query.join(Stock.alerts).with_entities(Alert.date,
                                                         Alert.trade_type,
                                                         Stock.stock_code,
-                                                        Stock.entry_price,
                                                         Alert.alert_price
                                                         ).order_by(Alert.id)
-    last_day = query.filter(Alert.date == date.today())
-    last_week = query.filter(Alert.date > date.today() - timedelta(7))
-    return last_day, last_week
+    last_day = query.filter(Alert.date == date.today()).all()
+    last_week = query.filter(Alert.date > date.today() - timedelta(7)).all()
+    return append_current_prices(last_day), append_current_prices(last_week)
 
 def insert_stock(market: str, code: str):
     current_price = download(code, period='5m', interval='1m', rounding=True)['Close'].iloc[0]
@@ -74,6 +72,7 @@ def insert_stock(market: str, code: str):
                     entry_price=current_price)
     db.session.add(new_stock)
     db.session.commit()
+    generate_alerts('5000d')
 
 def delete_stocks(ids: List):
     Stock.query.filter(Stock.id.in_(ids)).delete()
@@ -115,5 +114,22 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
         count_of_trades = len(period)
         portfolio_value = sum([t.alert_price - current_prices[t.stock_code] for t in period])
         res.append((count_of_trades, portfolio_value))
+
+    return res
+
+def append_current_prices(rows):
+    if len(rows) == 0:
+        return rows
+    stocks = set([r.stock_code for r in rows] + [''])
+    current_prices = download(stocks,
+                            period='5m',
+                            interval='1m',
+                            show_errors=False,
+                            rounding=True)['Close'].iloc[0]
+    res = []
+    for r in rows:
+        r = dict(r)
+        r['current_price'] = current_prices[r['stock_code']]
+        res.append(r)
 
     return res
