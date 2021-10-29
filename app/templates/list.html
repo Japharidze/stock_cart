@@ -114,8 +114,11 @@
 <script>
     $(document).ready( function () {
     $('.table').DataTable({
-        "order": []
+        "order": [],
+        columnDefs: [
+            { orderable: false, targets: 0 }
+        ]
     });
-    } );
+    });
 </script>
 {% endblock %}
