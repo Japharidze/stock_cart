@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import FloatField, IntegerField, RadioField, SubmitField, TextField, ValidationError
 from wtforms.validators import DataRequired
+from yfinance import download
 
 from app import app
 
@@ -15,5 +16,6 @@ class AddStockForm(FlaskForm):
     submit = SubmitField('Add Stock')
 
     def validate_stock_code(self, code):
-        if code.data not in app.stock_codes:
+        info = download(code, period='1m', interval='1m')
+        if info.shape[0] == 0:
             raise ValidationError("Invalid Stock Code!")

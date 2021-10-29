@@ -78,13 +78,6 @@ def delete_stocks(ids: List):
     Stock.query.filter(Stock.id.in_(ids)).delete()
     db.session.commit()
 
-def generate_all_codes():
-    r = get('https://api.iextrading.com/1.0/ref-data/symbols')
-    stocks = r.json()
-    stock_codes = {'codes': [x['symbol'] for x in stocks]}
-    with open('stocks.json', 'w') as f:
-        json.dump(stock_codes, f)
-
 def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
     query = Alert.query.join(Stock.alerts).with_entities(
                                             Alert.date,
