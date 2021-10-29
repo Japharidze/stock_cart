@@ -85,6 +85,8 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
                                             Stock.stock_code,
                                             Alert.alert_price
     )
+    if query.count() == 0:
+        return None
     today = date.today()
     date_filters = [2, 5, 10]
     date_filters = [today - relativedelta(years=x) for x in date_filters]
