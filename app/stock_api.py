@@ -106,7 +106,13 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
     res = []
     for period in data:
         count_of_trades = len(period)
-        portfolio_value = sum([t.alert_price - current_prices[t.stock_code] for t in period])
+        portfolio_value = 0
+        for t in period:
+            diff = t.alert_price - current_prices[t.stock_code]
+            if t.trade_type == 'Sell':
+                portfolio_value += diff
+            else:
+                portfolio_value -= diff
         res.append((count_of_trades, portfolio_value))
 
     return res
