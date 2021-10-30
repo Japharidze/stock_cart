@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block title %} Index {% endblock %}
 {% block body %}
-        <div class="center">
-            <a class="btn btn-primary" href="{{ url_for('historical_performance') }}">Historical Performance </a>
-            <a class="btn btn-primary" href="{{ url_for('manage_list') }}">Manage List</a>
-            <a class="btn btn-primary" href="{{ url_for('current_alerts') }}">Current Alerts</a>
-        </div>
+<div class="container">
+    <div class="row align-items-end center">
+    <div class="col">        
+        <a class="btn btn-primary" href="{{ url_for('historical_performance') }}">Historical Performance </a>
+    </div>
+    <div class="col">
+        <a class="btn btn-primary" href="{{ url_for('manage_list') }}">Manage List</a>
+    </div>
+    <div class="col">
+        <a class="btn btn-primary" href="{{ url_for('current_alerts') }}">Current Alerts</a>
+    </div>
+    </div>
+</div>
 {% endblock %}
