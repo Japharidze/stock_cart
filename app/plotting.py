@@ -4,7 +4,6 @@ from bokeh.layouts import gridplot
 import yfinance as yf
 
 def bokeh_plot(df, stock_code, plot_width, plot_height):
-#     print(df.head())
     inc = df.Close > df.Open
     dec = df.Open > df.Close
     w = 18*60*60*1000
@@ -18,16 +17,12 @@ def bokeh_plot(df, stock_code, plot_width, plot_height):
     p1.triangle(df.index[df.buy_K], df.Close[df.buy_K], size = 10, color = 'green', legend_label='Long') 
     p1.triangle(df.index[df.sell_K], df.Close[df.sell_K], size = 10, color = 'red', legend_label='Short')
     
-    #return p1
-
     p2 = figure(x_axis_type="datetime", x_range=p1.x_range, width=plot_width, height=plot_height//2, title ='{} K'.format(stock_code))
     p2.line(df.index, df['STOCHk_14_3_3'], color="tomato", legend_label="K 14-3-3", line_width=2)
     p2.line(df.index, df['STOCHk_50_3_3'], color="lawngreen", legend_label="K 50-3-3", line_width=2)
     p2.triangle(df.index[df.buy_K], [0]*sum(df.buy_K), size = 10, color = 'green', legend_label='Long') 
     p2.triangle(df.index[df.sell_K], [0]*sum(df.sell_K), size = 10, color = 'red', legend_label='Short') 
     
-    #output_file(filename=f"stock_charts{stock_code}.html", title="Static HTML file")
-
     return gridplot([p1, p2], ncols=1,) # plot_width=plot_width, plot_height=plot_height)
 
 
