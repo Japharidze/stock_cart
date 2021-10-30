@@ -1,7 +1,6 @@
 import json
 from typing import List, Tuple
 from flask_migrate import current
-from requests import get
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -46,7 +45,6 @@ def generate_alerts(period: str ='100d'):
         hist['sell_K'] = hist.apply(lambda x: x['STOCHk_14_3_3']<30 and x['STOCHk_50_3_3'] > 70, axis=1)
         dt = get_buy_sell_info(hist)
         dt['Stock Code'] = code
-        print(period)
         for _, row in dt.iterrows():
             alert = Alert(date=row['Date'],
                         trade_type=row['Trade Type'],
@@ -66,10 +64,11 @@ def get_alerts():
     return append_current_prices(last_day), append_current_prices(last_week)
 
 def insert_stock(market: str, code: str):
-    current_price = download(code, period='5m', interval='1m', rounding=True)['Close'].iloc[0]
+    stock_info = Ticker(code).info
     new_stock = Stock(market=market, 
-                    stock_code=code, 
-                    entry_price=current_price)
+                    stock_code=code,
+                    company_name=stock_info['longName'],
+                    entry_price=stock_info['currentPrice'])
     db.session.add(new_stock)
     db.session.commit()
     generate_alerts('5000d')

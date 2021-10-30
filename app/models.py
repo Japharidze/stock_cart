@@ -10,6 +10,7 @@ class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     market = db.Column(db.String(16), nullable=False)
     stock_code = db.Column(db.String(8), index=True)
+    company_name = db.Column(db.String(50))
     entry_price = db.Column(db.Float, nullable=False)
     alerts = db.relationship('Alert', backref='stocks', lazy=True, cascade="all, delete")
 
