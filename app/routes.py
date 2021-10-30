@@ -1,9 +1,12 @@
+import json
 from flask import render_template, redirect, url_for, request, jsonify
+from bokeh.embed import json_item
 
 from app import app
 from .stock_api import get_alerts, insert_stock, delete_stocks, historical_model
 from .forms import InvestmentForm, AddStockForm
 from .models import Stock
+from .plotting import save_plot_signals
 
 @app.route('/')
 @app.route('/index')
@@ -50,3 +53,8 @@ def del_stocks():
     ids = request.form['ids'].split(',')
     delete_stocks([int(x) for x in ids])
     return jsonify({'resp': 'done'})
+
+@app.route('/plot/<code>')
+def plot(code):
+    p = save_plot_signals(code, period="200d")
+    return json.dumps(json_item(p, "myplot"))

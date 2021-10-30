@@ -35,7 +35,7 @@
                     <td>{{ alert['stock_code'] }}</td>
                     <td>{{ alert['alert_price'] }}</td>
                     <td>{{ alert['current_price'] }}</td>
-                    <td><a href="">View</a></td>
+                    <td><a name='row-chart' href="" data-value="{{ alert['stock_code'] }}">View</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -61,7 +61,7 @@
                     <td>{{ alert['stock_code'] }}</td>
                     <td>{{ alert['alert_price'] }}</td>
                     <td>{{ alert['current_price'] }}</td>
-                    <td><a href="">View</a></td>
+                    <td><a name='row-chart' href="" data-value="{{ alert['stock_code'] }}">View</a></td>
                 </tr>
                 {% endfor %}
                 </tr>
@@ -69,11 +69,34 @@
         </table>
     </div>
 </div>
+<div id="chartModal">
+  <!-- Modal content -->
+  <div id="modal-content">
+    <div id='myplot'></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready( function () {
     $('.table').DataTable();
     } );
+</script>
+<script>
+    var modal = document.getElementById("chartModal");
+    $("a[name='row-chart']").click(function(){
+        var code = $(this).data('value');
+        $('#myplot').empty();
+        fetch(`/plot/${code}`).then(function(response) { return response.json(); })
+          .then(function(item) { return Bokeh.embed.embed_item(item); })
+        modal.style.display = 'block';
+        return false;
+    });
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 {% endblock %}

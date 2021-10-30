@@ -1,3 +1,12 @@
+$(document).ready( function () {
+    $('.table').DataTable({
+        "order": [],
+        columnDefs: [
+            { orderable: false, targets: 0 }
+        ]
+    });
+});
+
 $('.deleteStocks').click(function() {
     var checked_boxes = $('.show input[name="row-check"]:checked')
     var list = checked_boxes.map(function() {
@@ -10,7 +19,7 @@ $('.deleteStocks').click(function() {
         function(){
             location.reload();
         });
-})
+});
 
 $("input[name='check-all'").click(function () {
 		if ($(".active input:checkbox").prop("checked")) {
@@ -19,3 +28,8 @@ $("input[name='check-all'").click(function () {
 			$(".active input:checkbox[name='row-check']").prop("checked", false);
 		}
 	});
+
+$(document).ready(function() {
+    var x = '123';
+    //alert(`sadwad ${x}`);
+})
