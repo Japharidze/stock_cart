@@ -98,8 +98,8 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
     
     stocks = [s.stock_code for s in data[2]] + [''] # for download to work even with 1 code
     current_prices = download(stocks, 
-                            period="5m",
-                            interval="1m",
+                            period="1d",
+                            interval="15m",
                             show_errors=False,
                             rounding=True)['Close'].iloc[0]
 
@@ -116,8 +116,8 @@ def append_current_prices(rows):
         return rows
     stocks = set([r.stock_code for r in rows] + [''])
     current_prices = download(stocks,
-                            period='5m',
-                            interval='1m',
+                            period='1d',
+                            interval='15m',
                             show_errors=False,
                             rounding=True)['Close'].iloc[0]
     res = []
