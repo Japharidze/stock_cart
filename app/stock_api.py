@@ -68,7 +68,7 @@ def insert_stock(market: str, code: str):
     new_stock = Stock(market=market, 
                     stock_code=code,
                     company_name=stock_info['longName'],
-                    entry_price=stock_info['currentPrice'])
+                    entry_price=round(stock_info['currentPrice'], 2))
     db.session.add(new_stock)
     db.session.commit()
     generate_alerts('5000d')
@@ -96,12 +96,8 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
     else:
         data = [q.all() for q in queries]
     
-    stocks = [s.stock_code for s in data[2]] + [''] # for download to work even with 1 code
-    current_prices = download(stocks, 
-                            period="1d",
-                            interval="15m",
-                            show_errors=False,
-                            rounding=True)['Close'].iloc[0]
+    stocks = list(set([s.stock_code for s in data[2]]))
+    current_prices = fetch_current_prices(stocks)
 
     res = []
     for period in data:
@@ -121,11 +117,7 @@ def append_current_prices(rows):
     if len(rows) == 0:
         return rows
     stocks = set([r.stock_code for r in rows] + [''])
-    current_prices = download(stocks,
-                            period='1d',
-                            interval='15m',
-                            show_errors=False,
-                            rounding=True)['Close'].iloc[0]
+    current_prices = fetch_current_prices(stocks)
     res = []
     for r in rows:
         r = dict(r)
@@ -133,3 +125,21 @@ def append_current_prices(rows):
         res.append(r)
 
     return res
+
+def fetch_current_prices(stocks: List):
+    # IDK why but the download function doesn's work where list contains dot_named_stocks
+    dot_named_stocks = [s for s in stocks if '.' in s]
+    stocks = [s for s in stocks if s not in dot_named_stocks]
+    is_empty = len(dot_named_stocks) == 0
+    current_prices = download(stocks + [''],
+                            period='1d',
+                            interval='15m',
+                            show_errors=False,
+                            rounding=True)['Close'].iloc[-1]
+    if not is_empty:
+        current_prices = current_prices.append(download(dot_named_stocks + [''],
+                                                period='1d',
+                                                interval='15m',
+                                                show_errors=False,
+                                                rounding=True)['Close'].iloc[-1])
+    return current_prices
