@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 import pandas_ta as ta
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from yfinance import Ticker, download
 
 from app import db
@@ -116,7 +116,7 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
 def append_current_prices(rows):
     if len(rows) == 0:
         return rows
-    stocks = set([r.stock_code for r in rows] + [''])
+    stocks = set([r.stock_code for r in rows])
     current_prices = fetch_current_prices(stocks)
     res = []
     for r in rows:
@@ -130,13 +130,17 @@ def fetch_current_prices(stocks: List):
     # IDK why but the download function doesn's work where list contains dot_named_stocks
     dot_named_stocks = [s for s in stocks if '.' in s]
     stocks = [s for s in stocks if s not in dot_named_stocks]
-    is_empty = len(dot_named_stocks) == 0
-    current_prices = download(stocks + [''],
+    dots_is_empty = len(dot_named_stocks) == 0
+    normals_is_empty = len(stocks) == 0
+
+    current_prices = Series(dtype=float)
+    if not normals_is_empty:
+        current_prices = current_prices.append(download(stocks + [''],
                             period='1d',
                             interval='15m',
                             show_errors=False,
-                            rounding=True)['Close'].iloc[-1]
-    if not is_empty:
+                            rounding=True)['Close'].iloc[-1])
+    if not dots_is_empty:
         current_prices = current_prices.append(download(dot_named_stocks + [''],
                                                 period='1d',
                                                 interval='15m',
