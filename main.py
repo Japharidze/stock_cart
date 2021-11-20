@@ -1,8 +1,8 @@
 import os
 from app import app, scheduler
-from app.stock_api import generate_alerts
+from app.jobs import alerts_job
 
-scheduler.add_job(id='araperi', func=generate_alerts, trigger='interval', days=1)
+scheduler.add_job(id='alerts job', func=alerts_job, trigger='interval', days=1)
 scheduler.start()
 
 if __name__ == '__main__':

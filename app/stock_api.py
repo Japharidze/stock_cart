@@ -1,7 +1,7 @@
 import json
 from typing import List, Tuple
 from flask_migrate import current
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
 
 import pandas_ta as ta
@@ -34,7 +34,7 @@ def get_buy_sell_info(df):
         trade_log = fill_info(df, trade_log, sell_time, buy_sell='Sell')
     return trade_log
 
-def generate_alerts(period: str ='100d'):
+def generate_alerts(period: str ='100d', clip_today=False):
     codes = Stock.query.all()
     for code in codes:
         stock = Ticker(code.stock_code)
@@ -45,6 +45,8 @@ def generate_alerts(period: str ='100d'):
         hist['sell_K'] = hist.apply(lambda x: x['STOCHk_14_3_3']<30 and x['STOCHk_50_3_3'] > 70, axis=1)
         dt = get_buy_sell_info(hist)
         dt['Stock Code'] = code
+        if clip_today:
+            dt = dt[dt['Date'] >= datetime.combine(date.today(), datetime.min.time())]
         for _, row in dt.iterrows():
             alert = Alert(date=row['Date'],
                         trade_type=row['Trade Type'],
