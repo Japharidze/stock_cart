@@ -8,3 +8,4 @@ class Config(object):
         or 'postgresql://postgres:admin@localhost/stockdb'
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///stockdb.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SCHEDULER_API_ENABLED = True
