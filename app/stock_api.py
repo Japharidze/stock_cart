@@ -106,12 +106,12 @@ def historical_model(amt: int = None, trade_type: str = None) -> List[Tuple]:
         count_of_trades = len(period)
         portfolio_value = 0
         for t in period:
-            diff = t.alert_price - current_prices[t.stock_code]
+            diff = t.alert_price - (current_prices[t.stock_code] or 0)
             if t.trade_type == 'Sell':
                 portfolio_value += diff
             else:
                 portfolio_value -= diff
-        res.append((count_of_trades, portfolio_value))
+        res.append((round(count_of_trades, 2), round(portfolio_value, 2)))
 
     return res
 
@@ -139,13 +139,13 @@ def fetch_current_prices(stocks: List):
     if not normals_is_empty:
         current_prices = current_prices.append(download(stocks + [''],
                             period='1d',
-                            interval='15m',
+                            # interval='15m',
                             show_errors=False,
                             rounding=True)['Close'].iloc[-1])
     if not dots_is_empty:
         current_prices = current_prices.append(download(dot_named_stocks + [''],
                                                 period='1d',
-                                                interval='15m',
+                                                # interval='15m',
                                                 show_errors=False,
                                                 rounding=True)['Close'].iloc[-1])
     return current_prices
