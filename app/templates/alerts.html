@@ -34,7 +34,7 @@
                     <td>{{ alert['date'] }}</td>
                     <td>{{ alert['trade_type'] }}</td>
                     <td>{{ alert['stock_code'] }}</td>
-                    <td>{{ alert['alert_price'] }}</td>
+                    <td>{{ alert['alert_price']|round(2) }}</td>
                     <td>{{ alert['current_price'] }}</td>
                     <td><a name='row-chart' href="" data-value="{{ alert['stock_code'] }}">View</a></td>
                 </tr>
@@ -60,7 +60,7 @@
                     <td>{{ alert['date'] }}</td>
                     <td>{{ alert['trade_type'] }}</td>
                     <td>{{ alert['stock_code'] }}</td>
-                    <td>{{ alert['alert_price'] }}</td>
+                    <td>{{ alert['alert_price']|round(2) }}</td>
                     <td>{{ alert['current_price'] }}</td>
                     <td><a name='row-chart' href="" data-value="{{ alert['stock_code'] }}">View</a></td>
                 </tr>

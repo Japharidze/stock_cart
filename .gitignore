@@ -131,3 +131,4 @@ dmypy.json
 # Custom
 *.db
 stocks.json
+stock_cart/*
