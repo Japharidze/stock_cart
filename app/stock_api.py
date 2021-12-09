@@ -65,7 +65,7 @@ def get_alerts():
                                                         Alert.alert_price
                                                         ).order_by(Alert.id)
     last_day = query.filter(Alert.date == date.today()).all()
-    last_week = query.filter(Alert.date > date.today() - timedelta(700)).all()
+    last_week = query.filter(Alert.date > date.today() - timedelta(70)).all()
     return append_current_prices(last_day), append_current_prices(last_week)
 
 def insert_stock(market: str, code: str):
