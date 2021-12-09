@@ -34,8 +34,11 @@ def get_buy_sell_info(df):
         trade_log = fill_info(df, trade_log, sell_time, buy_sell='Sell')
     return trade_log
 
-def generate_alerts(period: str ='100d', clip_today=False):
-    codes = Stock.query.all()
+def generate_alerts(period: str ='100d', clip_today=False, codes=[]):
+    if not codes:
+        codes = Stock.query.all()
+    else:
+        codes = Stock.query.filter(Stock.stock_code.in_(codes)).all()
     for code in codes:
         stock = Ticker(code.stock_code)
         hist = stock.history(period)
@@ -73,7 +76,7 @@ def insert_stock(market: str, code: str):
                     entry_price=round(stock_info['currentPrice'], 2))
     db.session.add(new_stock)
     db.session.commit()
-    generate_alerts('5000d')
+    generate_alerts('5000d', codes=[code])
 
 def delete_stocks(ids: List):
     Stock.query.filter(Stock.id.in_(ids)).delete()
