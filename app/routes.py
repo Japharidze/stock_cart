@@ -32,7 +32,7 @@ def manage_list():
     if request.method == 'POST':
         if form.validate_on_submit():
             insert_stock(form.market.data,
-                        form.stock_code.data)
+                        form.stock_code.data.upper())
             return redirect(url_for('manage_list'))
     asx_list = Stock.query.filter_by(market='asx').order_by(Stock.id).all()
     nasdaq_list = Stock.query.filter_by(market='nasdaq').order_by(Stock.id).all()
